@@ -3,6 +3,7 @@ kind: Application
 metadata:
   name: Mattermost App
   resourceVersion: "1.0"
+  repository: gravitational.io
   releaseNotes: |
     <ul>
       <li>First Release</li>
