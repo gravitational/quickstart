@@ -1,20 +1,25 @@
 apiVersion: v1
 kind: Application
 metadata:
-  name: Sample Application
+  name: Mattermost App
   resourceVersion: "1.0"
-base: gravitational.io/k8s:1.2.3-2
+  releaseNotes: |
+    <ul>
+      <li>First Release</li>
+    </ul>
+  logo:
+    backgroundImage: url("https://about.mattermost.com/wp-content/uploads/2016/01/logo.png")  
+base: gravitational.io/k8s-aws:0.0.0+latest
 installer:
-  logo_style:
-    backgroundImage: url("https://example.com/logo.jpg")
+  provisioners:
+    onprem:
+      variables:
+        docker:
+          backend: overlay
   servers:
     worker:
-      description: "Worker server profile for this sample app"
+      description: "Simple Mattermost Server"
       cpu:
         min_count: 4
       ram:
         min_total_mb: 2048
-hooks:
-  post_install:
-    script: |
-      echo "I have been installed and I am running!"
