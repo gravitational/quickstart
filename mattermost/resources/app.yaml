@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Application
+metadata:
+  name: Sample Application
+  resourceVersion: "1.0"
+base: gravitational.io/k8s:1.2.3-2
+installer:
+  logo_style:
+    backgroundImage: url("https://example.com/logo.jpg")
+  servers:
+    worker:
+      description: "Worker server profile for this sample app"
+      cpu:
+        min_count: 4
+      ram:
+        min_total_mb: 2048
+hooks:
+  post_install:
+    script: |
+      echo "I have been installed and I am running!"
