@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Application
 metadata:
-  name: Mattermost App
-  resourceVersion: "1.0"
+  name: mattermost
+  resourceVersion: "1.0.0"
   repository: gravitational.io
   releaseNotes: |
     <ul>
@@ -24,6 +24,9 @@ installer:
         min_count: 4
       ram:
         min_total_mb: 2048
+      instance_types:
+        aws_terraform:
+          - c3.4xlarge
   flavors:
     title: "How many nodes do you want?"
     items:
@@ -36,3 +39,32 @@ installer:
           worker: 1
   final_install_step:
     service_name: bandwagon
+hooks:
+  install:
+    spec:
+      apiVersion: batch/v1
+      kind: Job
+      metadata:
+        name: install
+      spec:
+        template:
+          metadata:
+            name: install
+          spec:
+            restartPolicy: OnFailure
+            containers:
+              - name: install
+                image: gravitational/debian-tall:0.0.1
+                command:
+                  - /usr/local/bin/kubectl
+                  - create
+                  - -f
+                  - /var/lib/gravity/resources/mattermost-config.yaml
+                  - -f
+                  - /var/lib/gravity/resources/postgres-service.yaml
+                  - -f
+                  - /var/lib/gravity/resources/worker-service.yaml
+                  - -f
+                  - /var/lib/gravity/resources/postgres.yaml
+                  - -f
+                  - /var/lib/gravity/resources/worker.yaml
