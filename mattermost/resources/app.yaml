@@ -8,7 +8,7 @@ metadata:
       <li>First Release</li>
     </ul>
   logo:
-    backgroundImage: url("https://about.mattermost.com/wp-content/uploads/2016/01/logo.png")  
+    backgroundImage: url("https://about.mattermost.com/wp-content/uploads/2016/01/logo.png")
 base: gravitational.io/k8s-aws:0.0.0+latest
 installer:
   provisioners:
@@ -23,3 +23,13 @@ installer:
         min_count: 4
       ram:
         min_total_mb: 2048
+  flavors:
+    title: "How many nodes do you want?"
+    items:
+      - name: "single"
+        description: ""
+        threshold:
+          value: 1
+          label: "1"
+        profiles:
+          worker: 1
