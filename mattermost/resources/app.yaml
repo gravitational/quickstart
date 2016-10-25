@@ -33,3 +33,5 @@ installer:
           label: "1"
         profiles:
           worker: 1
+  final_install_step:
+    service_name: bandwagon
