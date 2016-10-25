@@ -38,15 +38,25 @@ sudo docker build -t mattermost-worker:2.1.0 .
 
 * Connect to your Ops Center
 
-Your OpsCenter is <companyname>.gravitational.io
+Your OpsCenter is `companyname.gravitational.io`
 
 ```
-gravity ops connect https://<companyname>.gravitational.io <username> <password>
+gravity ops connect https://companyname.gravitational.io <username> <password>
 ```
 
 * Import Application into Ops Center
 
 
 ```
-gravity app import --vendor --ops-url=https://<companyname>.gravitational.io mattermost
+gravity app import --vendor --ops-url=https://companyname.gravitational.io mattermost
 ```
+
+Here's what it does:
+
+* Scans Kubernetes resoureces for docker images
+* Imports docker images from your local machine
+* Publishes application to the ops center
+
+## Using application
+
+Login to the ops center, and use the installer 
