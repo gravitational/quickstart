@@ -7,22 +7,17 @@ This guide will help you to release Kubernetes-Powered Private version of Matter
 ### Requirements
 
 This guide runs on Linux and Requires docker >= 1.8.x
+To verify that you have Docker running, try `docker info` before continuing.
 
 Mattermost application consists of a worker process that connects to PostgreSQL instance.
 
 ### Gravity
 
 ```
-curl https://gravitational.com/gravity/0.45 | sudo bash
+curl https://gravitational.com/install | bash
 ```
 
-(script should do this:
-
-```
-install -m 0755 /usr/local/bin/gravity
-mkdir -p /var/lib/gravity
-chown -R $(USER):$(USER) /var/lib/bravity
-```
+Make sure it worked, by typing `gravity version`.
 
 **Creating Mattermost Containers**
 
