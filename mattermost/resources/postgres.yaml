@@ -7,8 +7,9 @@ metadata:
     app: mattermost
     role: mattermost-database
 spec:
+  hostNetwork: true
   containers:
   - name: mattermost-postgres
-    image: apiserver:5000/postgres:9.4.4
+    image: postgres:9.4.4
     ports:
       - containerPort: 5432

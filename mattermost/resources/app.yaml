@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Application
 metadata:
   name: mattermost
-  resourceVersion: "1.0.0"
+  resourceVersion: "2.2.0"
   repository: gravitational.io
   releaseNotes: |
     <ul>

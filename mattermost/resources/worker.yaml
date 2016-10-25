@@ -17,8 +17,9 @@ spec:
         app: mattermost
         role: mattermost-worker
     spec:
+      hostNetwork: true
       containers:
-      - image: apiserver:5000/mattermost-worker:2.1.0
+      - image: mattermost-worker:2.2.0
         name: mattermost-worker
         ports:
         - containerPort: 80

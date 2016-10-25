@@ -30,8 +30,8 @@ data:
         },
        "SqlSettings": {
             "DriverName": "postgres",
-            "DataSource": "postgres://postgres:mattermost@postgres:5432/postgres?sslmode=disable",
-            "DataSourceReplicas": ["postgres://postgres:mattermost@postgres:5432/postgres?sslmode=disable"],
+            "DataSource": "postgres://postgres:mattermost@postgres.default.svc.cluster.local:5432/postgres?sslmode=disable",
+            "DataSourceReplicas": ["postgres://postgres:mattermost@postgres.default.svc.cluster.local:5432/postgres?sslmode=disable"],
             "MaxIdleConns": 10,
             "MaxOpenConns": 10,
             "Trace": false,
