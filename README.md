@@ -50,6 +50,23 @@ Here's what it does:
 * Imports docker images from your local machine
 * Publishes application to the ops center
 
-## Using application
+## Installing application
 
-Login to the ops center, and use it to install on AWS or OnPremise!
+### Using OpsCenter
+
+You can launch AWS and OnPremise installs from the OpsCenter to quickly test new versions.
+In this mode OpsCenter orchestrates the installation process.
+
+To launch installer, click on "Install" button of the application, and follow the wizard instructions.
+
+
+### Offline Mode
+
+To test complete offline installation:
+
+* click on "Download" link of the application.
+* upload the installer to the server you wish to install
+* tar -xf the installer tarball
+* launch `./install` and follow wizard instructions.
+
+
