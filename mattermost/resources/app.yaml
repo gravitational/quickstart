@@ -13,18 +13,6 @@ metadata:
 base: gravitational.io/k8s-aws:0.0.0+latest
 installer:
   provisioners:
-    virsh:
-      variables:
-        image: rhel72
-        devices:
-        - device: vdb
-          mb: 8000
-        - device: vdc
-          mb: 8000
-      commands:
-        - 'sudo hostname {{ .server.hostname }}'
-        - 'echo $(netstat -rn | grep UG | awk ''{print $2}'') {{ .variables.system.teleport_proxy_address }} | sudo tee -a /etc/hosts'
-        - 'curl --tlsv1.2 {{if .variables.system.devmode}}--insecure{{end}} "{{ .variables.system.ops_url }}/{{ .variables.system.token }}/auto?system_device=vdb&docker_device=vdc" | sudo bash'
     onprem:
       variables:
         docker:
