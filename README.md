@@ -26,21 +26,19 @@ cd mattermost/worker
 sudo docker build -t mattermost-worker:2.1.0 .
 ```
 
-**Note:** Notice the `apiserver:5000` prefix. This is a private registry we've set up on our master server.
-
-
 ## Building Installable Version
 
 * Connect to your Ops Center
 
 Your OpsCenter is `companyname.gravitational.io`
 
+You can use user email and password used to login into ops center.
+
 ```
-gravity ops connect https://companyname.gravitational.io <username> <password>
+gravity ops connect https://companyname.gravitational.io <email> <password>
 ```
 
 * Import Application into Ops Center
-
 
 ```
 gravity app import --vendor --ops-url=https://companyname.gravitational.io mattermost
@@ -54,4 +52,4 @@ Here's what it does:
 
 ## Using application
 
-Login to the ops center, and use the installer 
+Login to the ops center, and use it to install on AWS or OnPremise!
