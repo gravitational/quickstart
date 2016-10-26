@@ -1,4 +1,4 @@
-# Quick Start 
+# Quick Start
 
 This guide will help you to release Kubernetes-Powered Private version of Mattermost
 
@@ -23,7 +23,7 @@ Make sure it worked, by typing `gravity version`.
 
 ```
 cd mattermost/worker
-sudo docker build -t mattermost-worker:2.1.0 .
+sudo docker build -t mattermost-worker:2.2.0 .
 ```
 
 ## Building Installable Version
