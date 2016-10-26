@@ -1,72 +1,149 @@
-# Quick Start
+# Introduction
 
-This guide will help you to release Kubernetes-Powered Private version of Mattermost
+The purpose of this Quick Start Guide is to help software vendors evaluate
+Gravitational technology for packaging complex applications for private 
+cloud deployments.
 
-## Installation
+We will use [Mattermost](https://www.mattermost.org/), an open source Slack
+clone, as an example application. Mattermost consists of a worker process that
+connects to PostgreSQL instance.
 
-### Requirements
+## Prerequisites
 
-This guide runs on Linux and Requires docker >= 1.8.x
-To verify that you have Docker running, try `docker info` before continuing.
+Before we start, please take a look at [Telekube Overview](overview.md) to get
+familiar with basic concepts of the Telekube system.
 
-Mattermost application consists of a worker process that connects to PostgreSQL instance.
+!!! warning "Important Notice":
+    [Telekube Overview](overview.md) uses new commands for its examples, for
+    the upcoming (not yet released) version of Telekube, while this tutorial
+    uses legacy commands. This shouldn't prevent you from getting started.
 
-### Gravity
+## System Requirements
+
+Telekube is a Linux-based system. By default we support 64-bit versions of the following
+distributions:
+
+* Ubuntu LTS
+* Debian 8+
+* RHEL/CentOS 7.2+
+
+If you have a need to support a Linux distribution not listed above,
+Gravitational offers Implementation Services that may be able to assist you.
+
+Additionally, this guide requires `Docker` version 1.8 or newer. Run `docker
+info` before continuing to make sure you have Docker up and running on your
+system.
+
+You will also need `git` to be able to download our sample code from Github.
+
+## Gravity Tools
+
+Telekube consists of three major components:
+
+* `gravity`   : CLI tool which is used for packaging and publishing applications.
+* `OpsCenter` : the Web UI for managing published applications and remotely
+  accessing private cloud deployments.
+* `teleport`  : SSH server for establishing secure SSH connections between the
+  OpsCenter and the instances of an application running on private clouds.
+  [Teleport](http://gravitational.com/teleport/) is a free open source tool
+  developed, maintained and supported by Gravitational. It can be used
+  independently from Telekube.
+
+## Getting the Tools
+
+Lets start by installing the `gravity` CLI tool onto your machine. You need to
+have `sudo` priviliges (the installer will ask for `sudo` password). 
+
+Run:
 
 ```
 curl https://gravitational.com/install | bash
 ```
 
-Make sure it worked, by typing `gravity version`.
+To make sure the installation succeeded, try typing `gravity version`.
 
-**Creating Mattermost Containers**
+## Sample App
 
-```
-cd mattermost/worker
-sudo docker build -t mattermost-worker:2.2.0 .
-```
+To download the sample build scripts for Mattermost, please run:
 
-## Building Installable Version
-
-* Connect to your Ops Center
-
-Your OpsCenter is `companyname.gravitational.io`
-
-You can use user email and password used to login into ops center.
-
-```
-gravity ops connect https://companyname.gravitational.io <email> <password>
+```bash
+$ git clone https://github.com/gravitational/quickstart.git
 ```
 
-* Import Application into Ops Center
+## Building Containers
 
+Before an application can be packaged and published via Telekube, you need
+to "containerize" it first. 
+
+The sample project you have fetched via `git` above contains Docker files 
+for Mattermost, as well as its Kubernetes resources.
+
+```python
+$ cd quickstart/mattermost/worker
+$ docker build -t mattermost-worker:2.2.0 .
 ```
-gravity app import --vendor --ops-url=https://companyname.gravitational.io mattermost
+
+## Packaging Mattermost
+
+To package an application, you have to connect to the `OpsCenter` first.
+You should already have an account with Gravitational, usually it's running
+on https://yourcompany.gravitational.io 
+
+Additionally, you should have your OpsCenter credentials (email+password)
+ready.
+
+To login into to the Ops Center using the CLI:
+
+```python
+gravity ops connect https://yourcompany.gravitational.io <email> <password>
 ```
 
-Here's what it does:
+Publish the application into the OpsCenter:
 
-* Scans Kubernetes resoureces for docker images
-* Imports docker images from your local machine
-* Publishes application to the ops center
+```python
+$ gravity app import --vendor --ops-url=https://companyname.gravitational.io mattermost
+```
 
-## Installing application
+The command above does the following:
 
-### Using OpsCenter
+* Scans Kubernetes resoureces for the docker images.
+* Packages the containers into a single deployable unit (tarball) while
+  removing the duplicate Docker layers to minimize the size of the deployment
+  (de-duplication).
+* Publishes the application tarball to the Ops Center.
 
-You can launch AWS and OnPremise installs from the OpsCenter to quickly test new versions.
-In this mode OpsCenter orchestrates the installation process.
+Now the application is ready to be distributed and installed into private clouds.
 
-To launch installer, click on "Install" button of the application, and follow the wizard instructions.
+## Installing the Application
 
+As covered in the [Overview](overview.md), there are two ways to install an 
+application packaged with Telekube:
 
-### Offline Mode
+* Online, via the OpsCenter.
+* Offline, via a downloadable tarball.
+
+## Online Installer
+
+This method of installation is called [the online
+mode](overview/#online-installer) and it assumes that the end user (a person
+installing the application) has access to the Internet.
+
+The simplest way to launch an online installer is to login into the Ops Center
+and click on "Install" dropdown for the published application.
+
+## Offline Mode
 
 To test complete offline installation:
 
-* click on "Download" link of the application.
-* upload the installer to the server you wish to install
-* tar -xf the installer tarball
-* launch `./install` and follow wizard instructions.
+* Click on "Download" link of the application.
+* Upload the installer to the server you wish to install.
+* Unpack the tarball via `tar -xzf <tarball.tar.gz>` into a Linux machine.
+* Launch `./install` CLI command and follow wizard instructions.
 
+The installer will copy itself to additional cluster nodes if needed.
+
+## Conclusion
+
+This is, in a nutshell, how publishing and distributing an application looks
+like on Telekube.
 
