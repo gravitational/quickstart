@@ -7,7 +7,7 @@ metadata:
     app: mattermost
     role: mattermost-worker
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
   - port: 80
     name: http

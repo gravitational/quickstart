@@ -39,6 +39,12 @@ installer:
           worker: 1
   final_install_step:
     service_name: bandwagon
+endpoints:
+  - name: "Mattermost"
+    description: "Mattermost application"
+    selector:
+      role: mattermost-worker
+    protocol: http
 hooks:
   install:
     spec:
