@@ -21,7 +21,7 @@ installer:
     worker:
       description: "Simple Mattermost Server"
       cpu:
-        min_count: 4
+        min_count: 1
       ram:
         min_total_mb: 2048
       instance_types:
