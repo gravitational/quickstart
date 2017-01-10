@@ -60,7 +60,7 @@ hooks:
             restartPolicy: OnFailure
             containers:
               - name: install
-                image: gravitational/debian-tall:0.0.1
+                image: quay.io/gravitational/debian-tall:0.0.1
                 command:
                   - /usr/local/bin/kubectl
                   - create
