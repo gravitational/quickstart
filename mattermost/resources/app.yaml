@@ -57,6 +57,3 @@ hooks:
                   - create
                   - -f
                   - /var/lib/gravity/resources/mattermost.yaml
-systemOptions:
-  docker:
-    storageDriver: overlay
