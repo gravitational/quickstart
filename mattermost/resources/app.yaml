@@ -13,6 +13,12 @@ endpoints:
   - name: "Setup"
     serviceName: bandwagon
     hidden: true
+providers:
+  aws:
+    regions:
+      - us-west-2
+      - us-east-1
+      - eu-central-1
 installer:
   setupEndpoints:
     - "Setup"
