@@ -110,6 +110,7 @@ metadata:
   labels:
     app: mattermost
     role: mattermost-database
+  namespace: default
 spec:
   type: NodePort
   ports:
@@ -125,6 +126,7 @@ metadata:
   labels:
     app: mattermost
     role: mattermost-worker
+  namespace: default
 spec:
   type: LoadBalancer
   ports:
@@ -141,6 +143,7 @@ metadata:
   labels:
     app: mattermost
     role: mattermost-database
+  namespace: default
 spec:
   hostNetwork: true
   containers:

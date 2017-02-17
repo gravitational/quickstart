@@ -63,3 +63,5 @@ hooks:
                   - create
                   - -f
                   - /var/lib/gravity/resources/mattermost.yaml
+                  - --namespace
+                  - default
