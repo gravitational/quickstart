@@ -14,7 +14,7 @@ smtp:
   password: <pass>
   username: username
   server: smtp.mailgun.org:587
-sers:
+users:
   # list of static users pre-configured for this portal
   - email: "admin@yourdomain.com"
     password: please-generate-it
