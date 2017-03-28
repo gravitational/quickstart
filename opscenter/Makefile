@@ -6,7 +6,7 @@ PREREQS := opscenter.yaml server.crt server.key
 
 .PHONY: all
 all:
-	@echo "view README.md for instructions"
+	@cat README.md
 
 .PHONY: prereqs
 prereqs:

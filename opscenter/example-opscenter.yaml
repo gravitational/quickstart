@@ -1,8 +1,8 @@
 advertise_addr: <example.gravitational.io:443>
 ssh_advertise_addr: <example.gravitational.io:33008>
 tls:
-  cert_file: example-server.crt
-  key_file: example-server.key
+  cert_file: /etc/gravitational/server.crt
+  key_file: /etc/gravitational/server.key
 oidc_connectors:
   - id: google
     redirect_url: https://<example.gravitational.io>/portalapi/v1/oidc/callback
@@ -14,13 +14,12 @@ smtp:
   password: <pass>
   username: username
   server: smtp.mailgun.org:587
-users:
-  # list of static users pre-configured for this portal
-  - email: "meta@gravitational.io"
-    password: please-generate-it-4f039dac-b80e-11e6-889c-9b8f68b723d5
-    type: "admin"
-    org: "gravitational.io"
-    identities:
-      - connector_id: "google"
-        email: "meta@gravitational.io"
-
+sers:
+  # list of static users pre-configured for this portal
+  - email: "admin@yourdomain.com"
+    password: please-generate-it
+    type: "admin"
+    org: "yourdomain.com"
+    identities:
+      - connector_id: "google"
+        email: "admin@yourdomain.com"
