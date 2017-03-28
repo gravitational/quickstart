@@ -11,6 +11,8 @@ $script = <<SCRIPT
     WantedBy=multi-user.target
 SCRIPT
 
+ip = "172.28.128.5"
+
 Vagrant.configure(2) do |config|
   # create a new volume (vdi file)
   def attach_media(vb, controller_name, device, sizeMB, port)
@@ -44,13 +46,7 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "centos/7"
-
-  # Disable automatic box update checking. If you disable this, then
-  # boxes will only be checked for updates when the user runs
-  # `vagrant box outdated`. This is not recommended.
   config.vm.box_check_update = false
 
   # Create a public network, which generally matched to bridged network.
@@ -58,21 +54,39 @@ Vagrant.configure(2) do |config|
   # your network.
   # config.vm.network "public_network"
 
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
+  config.vm.provision "file", source: "../server.key", destination: "~/server.key"
+  config.vm.provision "file", source: "../server.crt", destination: "~/server.crt"
+  config.vm.provision "file", source: "../opscenter.yaml", destination: "~/opscenter-base.yaml"
 
-  # fix grub to turn on memory cgroup
-  config.vm.provision "shell", args: [$script], inline: <<-SHELL
-    echo -e "$1" > /lib/systemd/system/kube-routes.service
-    systemctl enable kube-routes.service
-    systemctl start kube-routes.service
-    yum -y install net-tools
-  SHELL
+  token = ENV['TOKEN']
+  name = "telekube-opscenter-test"
+
+  config.vm.provision :shell do |shell|
+    shell.args = "#{ip} #{token} #{name}"
+    shell.inline = <<-SHELL
+
+    yum -y install net-tools curl
+    curl https://get.gravitational.io/telekube/install | bash
+
+    export PATH=/usr/local/bin:$PATH
+
+    mkdir -p /etc/gravitational
+    cp /home/vagrant/server.key /etc/gravitational/server.key
+    cp /home/vagrant/server.crt /etc/gravitational/server.crt
+
+    mkdir -p /home/vagrant/opscenter
+    cd /home/vagrant/opscenter
+    tele pull opscenter:0.0.0+latest -o installer.tar.gz
+    tar xvf ./installer.tar.gz
+
+    ./gravity ops config --value="$(cat /home/vagrant/opscenter-base.yaml)" > /etc/gravitational/opscenter.yaml
+
+    ./gravity install --advertise-addr=$1 --token=$2 --flavor=standalone --cluster=$3 --config=/etc/gravitational/opscenter.yaml --debug
+SHELL
+  end
 
   cpus = ENV['VAGRANT_NODE_CPUS'] || 1
   ram = ENV['VAGRANT_NODE_RAM'] || 3000
 
-  create_node(config.vm, "node-1", cpus, ram, "172.28.128.3")
+  create_node(config.vm, "node-1", cpus, ram, ip)
 end

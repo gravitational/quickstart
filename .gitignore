@@ -1,1 +1,8 @@
-*gz
+*.gz
+*.tfstate
+*.tfstate.backup
+*.swp
+opscenter.yaml
+server.key
+server.crt
+.vagrant
