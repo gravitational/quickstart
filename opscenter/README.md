@@ -81,8 +81,8 @@ Provisioning an OpsCenter
 ---
 Included in this directory is configuration to provision a Vagrant VM, as well as an AWS instance to run your OpsCenter. Once you have created the required files above, you can provision one of your choices as follows:
 
-- AWS: `make aws TOKEN=4340d6dbf469c13ba9ff56efccddffeb0ac1faf107fe99e49aa668ec85ec4e99`
-- Vagrant: `make vagrant TOKEN=4340d6dbf469c13ba9ff56efccddffeb0ac1faf107fe99e49aa668ec85ec4e99`
+- AWS: `make aws KEY_PAIR=<aws key name> TOKEN=<api token>`
+- Vagrant: `make vagrant TOKEN=<api token>`
 
 Post-provisioning
 ---
