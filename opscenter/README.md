@@ -7,7 +7,7 @@ Pre-requisites
  - Login for [https://get.gravitational.io](https://get.gravitational.io)
  - Telekube binaries
 
-Create an TLS certificate
+Create a TLS certificate
 ---
 The OpsCenter will use TLS to secure connections to it. In this repository are the files `example-server.crt` and `example-server.key` which hold the certificate and key to a self-signed certificate for `example.gravitational.io`. To deploy your own OpsCenter, you should create a certificate for your server. We recommend using a certificate signed by a trusted root authority, but you can use self-signed certificates if you wish.
 
@@ -82,6 +82,22 @@ Included in this directory is configuration to provision a Vagrant VM, as well a
 
 - AWS: `make aws KEY_PAIR=<aws key name> TOKEN=<api token>`
 - Vagrant: `make vagrant TOKEN=<api token>`
+
+Manually provisioning
+---
+Instead of using the provided `Makefile` you can easily run the provisioning yourself by hand.
+
+For AWS:
+```
+terraform apply -var key_pair=<your key pair name> -var provisioning_token=<API token> ./terraform
+```
+
+Or for Vagrant:
+```
+cd vagrant
+export TOKEN=<your token>
+vagrant up
+```
 
 Post-provisioning
 ---
