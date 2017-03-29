@@ -9,7 +9,7 @@ Pre-requisites
 
 Create an TLS certificate
 ---
-The OpsCenter will use TLS to secure connections to it. In this repository are the files `example-server.crt` and `example-server.key` which hold the certificate and key to a self-signed certificate for `example.gravitational.io`. Do deploy your own OpsCenter, you should create a certificate for your server. We recommend using a certificate signed by a trusted root authority, but you can use self-signed certificates if you wish. Here's  some information on [how to create your own self-signed certificate](http://www.akadia.com/services/ssh_test_certificate.html).
+The OpsCenter will use TLS to secure connections to it. In this repository are the files `example-server.crt` and `example-server.key` which hold the certificate and key to a self-signed certificate for `example.gravitational.io`. To deploy your own OpsCenter, you should create a certificate for your server. We recommend using a certificate signed by a trusted root authority, but you can use self-signed certificates if you wish.
 
 Once you have a certificate, please place the PEM encoded certificate in this directory as `server.crt` and the PEM encoded key as `server.key`.
 
@@ -76,7 +76,6 @@ You'll also need to specify SMTP settings if you wish to send email. Finally, yo
 
 Once you've made your changes, save the file as `opscenter.yaml` in this directory.
 
-
 Provisioning an OpsCenter
 ---
 Included in this directory is configuration to provision a Vagrant VM, as well as an AWS instance to run your OpsCenter. Once you have created the required files above, you can provision one of your choices as follows:
@@ -87,3 +86,7 @@ Included in this directory is configuration to provision a Vagrant VM, as well a
 Post-provisioning
 ---
 Once provisioning is done, you'll need to point a DNS record for your chosen hostname at either the ELB load balancer that was created (for AWS) or the IP of your virtual machine (for Vagrant). Once the DNS record is configured, you should be able to sign in to your OpsCenter with your admin credentials, or configured OIDC connector.
+
+Generating a self-signed TLS certificate
+---
+Here's  some information on [how to create your own self-signed certificate](http://www.akadia.com/services/ssh_test_certificate.html).
