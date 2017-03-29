@@ -7,9 +7,9 @@ Pre-requisites
  - Login for [https://get.gravitational.io](https://get.gravitational.io)
  - Telekube binaries
 
-Create an SSL certificate
+Create an TLS certificate
 ---
-The OpsCenter will use SSL to secure connections to it. In this repository are the files `example-server.crt` and `example-server.key` which hold the certificate and key to a self-signed certificate for `example.gravitational.io`. Do deploy your own OpsCenter, you should create a certificate for your server. We recommend using a certificate signed by a trusted root authority, but you can use self-signed certificates if you wish. Here's  some information on [how to create your own self-signed certificate](http://www.akadia.com/services/ssh_test_certificate.html).
+The OpsCenter will use TLS to secure connections to it. In this repository are the files `example-server.crt` and `example-server.key` which hold the certificate and key to a self-signed certificate for `example.gravitational.io`. Do deploy your own OpsCenter, you should create a certificate for your server. We recommend using a certificate signed by a trusted root authority, but you can use self-signed certificates if you wish. Here's  some information on [how to create your own self-signed certificate](http://www.akadia.com/services/ssh_test_certificate.html).
 
 Once you have a certificate, please place the PEM encoded certificate in this directory as `server.crt` and the PEM encoded key as `server.key`.
 
