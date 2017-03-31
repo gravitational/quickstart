@@ -85,18 +85,31 @@ Included in this directory is configuration to provision a Vagrant VM, as well a
 
 Manually provisioning
 ---
-Instead of using the provided `Makefile` you can easily run the provisioning yourself by hand.
+Instead of using the provided `Makefile` and infrastructure you can easily run the provisioning yourself by hand on infrastructure of your choosing.
 
-For AWS:
+The first thing you'll need to do is install Telekube:
+
 ```
-terraform apply -var key_pair=<your key pair name> -var provisioning_token=<API token> ./terraform
+curl https://get.gravitational.io/telekube/install | bash
 ```
 
-Or for Vagrant:
+Next, you'll need to pull the OpsCenter app installer, and untar it.
+
 ```
-cd vagrant
-export TOKEN=<your token>
-vagrant up
+tele pull opscenter:0.0.0+latest -o installer.tar.gz
+tar xvf ./installer.tar.gz
+```
+
+Before starting the install, you'll use the included `gravity` binary to convert your `opscenter.yaml` configuration into a format usable by the installer.
+
+```
+./gravity ops config --value="$(cat opscenter.yaml)" > installer_opscenter.yaml
+```
+
+Finally, run the standalone install:
+
+```
+./gravity install --advertise-addr=(server IP address) --token=(your token) --flavor=standalone --cluster=(cluster name) --config=installer_opscenter.yaml
 ```
 
 Post-provisioning
