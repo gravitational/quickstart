@@ -85,7 +85,7 @@ Included in this directory is configuration to provision a Vagrant VM, as well a
 
 Manually provisioning
 ---
-Instead of using the provided `Makefile` and infrastructure you can easily run the provisioning yourself by hand on infrastructure of your choosing.
+Instead of using the provided `Makefile` and infrastructure automation you can easily run the provisioning yourself by hand on infrastructure of your choosing.
 
 The first thing you'll need to do is install Telekube:
 
