@@ -1,4 +1,4 @@
-advertise_addr: <example.gravitational.io:443>
+web_advertise_addr: <example.gravitational.io:443>
 ssh_advertise_addr: <example.gravitational.io:33008>
 tls:
   cert_file: /etc/gravitational/server.crt

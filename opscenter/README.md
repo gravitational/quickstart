@@ -41,7 +41,7 @@ Configuring OpsCenter
 The last step prior to provisioning is creating a file with the full set of configuration. We've provided an example configuration for you in the file `example-opscenter.yaml`.
 
 ```
-advertise_addr: <example.gravitational.io:443>
+web_advertise_addr: <example.gravitational.io:443>
 ssh_advertise_addr: <example.gravitational.io:33008>
 tls:
   cert_file: /etc/gravitational/server.crt
@@ -68,7 +68,7 @@ users:
         email: "admin@yourdomain.com"
 ```
 
-You'll need to create your own version of this file, with your own settings. Specifically, you'll need to provide the DNS names for `advertise_addr` and `ssh_advertise_addr` that you plan to use. You can leave the `tls` settings alone as we will use those paths on the server we provision.
+You'll need to create your own version of this file, with your own settings. Specifically, you'll need to provide the DNS names for `web_advertise_addr` and `ssh_advertise_addr` that you plan to use. You can leave the `tls` settings alone as we will use those paths on the server we provision.
 
 To create a Google `oidc_connector` you'll need to [create the appropriate application credentials in Google's settings](https://developers.google.com/identity/protocols/OpenIDConnect). Be sure to specify the allowed callback URL in Google's settings as `https://<your chosen domain>/portalapi/v1/oidc/callback`.
 
