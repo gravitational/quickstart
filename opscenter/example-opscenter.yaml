@@ -17,7 +17,6 @@ smtp:
 users:
   # list of static users pre-configured for this portal
   - email: "admin@yourdomain.com"
-    password: please-generate-it
     type: "admin"
     org: "yourdomain.com"
     identities:
