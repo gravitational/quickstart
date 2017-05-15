@@ -65,3 +65,6 @@ hooks:
                   - /var/lib/gravity/resources/mattermost.yaml
                   - --namespace
                   - default
+systemOptions:
+  docker:
+    storageDriver: overlay
