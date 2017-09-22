@@ -8,7 +8,7 @@ data:
   config.json: |
     {
         "ServiceSettings": {
-            "ListenAddress": ":80",
+            "ListenAddress": ":5000",
             "MaximumLoginAttempts": 10,
             "SegmentDeveloperKey": "",
             "GoogleDeveloperKey": "",
@@ -39,9 +39,9 @@ data:
             "AtRestEncryptKey": "7rAh6iwQCkV4cA1Gsg3fgGOXJAQ43QVg"
         },
         "LogSettings": {
-            "EnableConsole": false,
+            "EnableConsole": true,
             "ConsoleLevel": "INFO",
-            "EnableFile": true,
+            "EnableFile": false,
             "FileLevel": "INFO",
             "FileFormat": "",
             "FileLocation": ""
@@ -131,7 +131,9 @@ spec:
   type: LoadBalancer
   ports:
   - port: 80
+    targetPort: 5000
     name: http
+    nodePort: 32010
   selector:
     role: mattermost-worker
 ---
@@ -145,9 +147,10 @@ metadata:
     role: mattermost-database
   namespace: default
 spec:
-  hostNetwork: true
   containers:
   - name: mattermost-postgres
+    securityContext:
+      runAsUser: 0
     image: postgres:9.4.4
     ports:
       - containerPort: 5432
@@ -172,12 +175,11 @@ spec:
         app: mattermost
         role: mattermost-worker
     spec:
-      hostNetwork: true
       containers:
       - image: mattermost-worker:2.2.0
         name: mattermost-worker
         ports:
-        - containerPort: 80
+        - containerPort: 5000
           protocol: TCP
         volumeMounts:
         - name: config-volume

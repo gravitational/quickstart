@@ -67,4 +67,5 @@ hooks:
                   - default
 systemOptions:
   docker:
-    storageDriver: overlay
+    storageDriver: overlay2
+
