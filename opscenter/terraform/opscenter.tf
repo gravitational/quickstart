@@ -1,16 +1,16 @@
 variable "key_pair" {}
 variable "provisioning_token" {}
 
+variable "advertise_addr" {
+    description = "format: <hostname>:<https-port>,<ssh-port>, e.g. example.com:443,33008"
+}
+
 variable "region" {
     default = "us-east-1"
 }
 
 variable "cluster_name" {
-    default = "telekube-opscenter-test"
-}
-
-variable "config" {
-    default = "opscenter.yaml"
+    default = "telekube-opscenter-test-2"
 }
 
 variable "server_key" {
@@ -185,11 +185,16 @@ sed -i.bak 's/Defaults    requiretty/#Defaults    requiretty/g' /etc/sudoers
 
 # install config
 mkdir -p /etc/gravitational
-cat > /etc/gravitational/server.key <<EOT
-${file(var.server_key)}
-EOT
-cat > /etc/gravitational/server.crt <<EOT
-${file(var.server_cert)}
+cat > /etc/gravitational/tlskeypair.yaml <<EOT
+kind: tlskeypair
+version: v2
+metadata:
+  name: keypair
+spec:
+  private_key: |
+    ${indent(4, file(var.server_key))}
+  cert: |
+    ${indent(4, file(var.server_cert))}
 EOT
 
 # install opscenter
@@ -203,9 +208,8 @@ tar xvf ./installer.tar.gz
 
 PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
 
-./gravity ops config --value="${file(var.config)}" > /etc/gravitational/opscenter.yaml
-
-./gravity install --advertise-addr=$PRIVATE_IP --token=${var.provisioning_token} --flavor=standalone --cluster=${var.cluster_name} --config=/etc/gravitational/opscenter.yaml --debug
+./gravity install --advertise-addr=$PRIVATE_IP --token=${var.provisioning_token} --flavor=standalone --cluster=${var.cluster_name} --ops-advertise-addr=${var.advertise_addr} --debug
+./gravity resource create /etc/gravitational/tlskeypair.yaml
 
 EOF
 
