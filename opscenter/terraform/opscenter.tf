@@ -10,7 +10,7 @@ variable "region" {
 }
 
 variable "cluster_name" {
-    default = "telekube-opscenter-test-2"
+    default = "telekube-opscenter-test"
 }
 
 variable "server_key" {
