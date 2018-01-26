@@ -1,0 +1,3 @@
+# Telekube Quickstart
+
+vagrant up

@@ -1,0 +1,8 @@
+kind: user
+version: v2
+metadata:
+  name: "admin@localhost"
+spec:
+  type: "admin"
+  password: "abc123"
+  roles: ["@teleadmin"]
