@@ -8,4 +8,3 @@ cd /vagrant
 tar -xf mattermost.tar
 ./gravity install --advertise-addr=172.28.128.101 --token=test
 gravity resource create -f  /tmp/local.yaml
-

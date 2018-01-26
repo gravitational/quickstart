@@ -1,0 +1,66 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Parts of this file are taken from https://github.com/kubernetes/kubernetes/blob/master/Vagrantfile
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+# Require a recent version of vagrant otherwise some have reported errors setting host names on boxes
+Vagrant.require_version ">= 1.7.4"
+
+# Give access to all physical cpu cores
+# Rewritten to actually determine the number of hardware cores instead of assuming
+# that the host has hyperthreading enabled.
+host = RbConfig::CONFIG['host_os']
+$vm_cpus = (ENV['VAGRANT_NODE_CPU'] || 0).to_i
+if host =~ /linux/ && $vm_cpus == 0
+  $vm_cpus = `cat /proc/cpuinfo | grep 'core id' | sort -u | wc -l`.to_i
+  if $vm_cpus < 1
+      $vm_cpus = `nproc`.to_i
+  end
+end
+
+# RAM to use for nodes in MB
+$vm_node_mem = (ENV['VAGRANT_NODE_RAM'] || 3000).to_i
+
+# Box to boot
+$vm_box = ENV['VAGRANT_BOX'] || 'centos/7'
+
+# Number of instances to start
+$instances = (ENV['VAGRANT_INSTANCES'] || 1).to_i
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://atlas.hashicorp.com/search.
+  config.vm.box = $vm_box
+  config.vm.synced_folder ".", "/vagrant", disabled: false
+
+  # Disable automatic box update checking. If you disable this, then
+  # boxes will only be checked for updates when the user runs
+  # `vagrant box outdated`. This is not recommended.
+  config.vm.box_check_update = false
+
+  (1..$instances).each do |i|
+    node_name = "node-%d" % i
+    config.vm.define node_name do |node|
+      node.vm.hostname = node_name
+      node.vm.network "private_network", ip: "172.28.128.#{i+100}" # eth0
+      node.vm.network "private_network", ip: "172.29.128.#{i+100}" # eth1
+      node.vm.provision "file", source: "local.yaml", destination: "/tmp/local.yaml"
+      node.vm.provision "shell", path: "provision.sh"
+      node.vm.provider "libvirt" do |libvirt|
+        libvirt.cpus = $vm_cpus
+        libvirt.memory = $vm_node_mem
+        libvirt.cpu_model = "host"
+        libvirt.volume_cache = "none"
+      end
+      node.vm.provider "virtualbox" do |vb|
+        vb.name = node.vm.hostname
+        vb.cpus = $vm_cpus
+        vb.memory = $vm_node_mem
+      end
+    end
+  end
+end
