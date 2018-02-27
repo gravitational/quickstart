@@ -145,13 +145,15 @@ metadata:
   labels:
     app: mattermost
     role: mattermost-database
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}    
   namespace: default
 spec:
   containers:
   - name: mattermost-postgres
     securityContext:
       runAsUser: 0
-    image: postgres:9.4.4
+    image: {{.Values.registry}}postgres:9.4.4
     ports:
       - containerPort: 5432
 ---
@@ -162,6 +164,8 @@ metadata:
   labels:
     app: mattermost
     role: mattermost-worker
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}    
   name: mattermost-worker
   namespace: default
 spec:
@@ -176,7 +180,7 @@ spec:
         role: mattermost-worker
     spec:
       containers:
-      - image: mattermost-worker:2.2.0
+      - image: {{.Values.registry}}mattermost-worker:2.2.0
         name: mattermost-worker
         ports:
         - containerPort: 5000
