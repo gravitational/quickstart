@@ -10,5 +10,5 @@
        restartPolicy: OnFailure
        containers:
          - name: install
-           image: helm:2.8.1
+           image: quay.io/gravitational/debian-tall:0.0.1
            command: ["/usr/local/bin/helm", "install", "/var/lib/gravity/resources/charts/mattermost", "--set", "registry=leader.telekube.local:5000/"]
