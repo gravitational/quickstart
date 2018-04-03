@@ -139,21 +139,39 @@ spec:
 ---
 # mattermost postgres worker
 apiVersion: v1
-kind: Pod
+kind: ReplicationController
 metadata:
   name: mattermost-database
+  namespace: default
   labels:
     app: mattermost
     role: mattermost-database
-  namespace: default
 spec:
-  containers:
-  - name: mattermost-postgres
-    securityContext:
-      runAsUser: 0
-    image: postgres:9.4.4
-    ports:
-      - containerPort: 5432
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mattermost
+      role: mattermost-database
+  template:
+    metadata:
+      labels:
+        app: mattermost
+        role: mattermost-database
+    spec:
+      containers:
+      - name: mattermost-postgres
+        securityContext:
+          runAsUser: 0
+        image: postgres:9.4.4
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: psql-data
+          mountPath: /var/lib/postgresql
+      volumes:
+      - name: psql-data
+        hostPath:
+          path: /var/lib/postgresql
 ---
 # mattermost worker
 apiVersion: extensions/v1beta1
