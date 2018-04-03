@@ -149,9 +149,7 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchLabels:
-      app: mattermost
-      role: mattermost-database
+    role: mattermost-database
   template:
     metadata:
       labels:
