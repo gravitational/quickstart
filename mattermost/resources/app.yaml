@@ -54,7 +54,5 @@ hooks:
   install:
     job: file://install.yaml
 systemOptions:
-  runtime:
-    version: 5.0.0-beta.1
   docker:
     storageDriver: overlay2
