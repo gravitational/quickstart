@@ -165,11 +165,11 @@ spec:
         - containerPort: 5432
         volumeMounts:
         - name: psql-data
-          mountPath: /var/lib/postgresql
+          mountPath: /var/lib/postgresql/data
       volumes:
       - name: psql-data
         hostPath:
-          path: /var/lib/postgresql
+          path: /var/lib/postgresql/data
 ---
 # mattermost worker
 apiVersion: extensions/v1beta1

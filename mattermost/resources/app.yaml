@@ -46,6 +46,10 @@ nodeProfiles:
         min: 1
       ram:
         min: "2GB"
+      volumes:
+        - name: psql-data
+          path: /var/lib/postgresql/data
+          targetPath: /var/lib/postgresql/data
     providers:
       aws:
         instanceTypes:
