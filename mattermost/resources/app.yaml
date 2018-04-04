@@ -26,20 +26,20 @@ installer:
       - name: "single"
         description: "A single node"
         nodes:
-          - profile: worker
+          - profile: node
             count: 1
       - name: "double"
         description: "A two-node cluster"
         nodes:
-          - profile: worker
+          - profile: node
             count: 2
       - name: "triple"
         description: "A three-node cluster"
         nodes:
-          - profile: worker
+          - profile: node
             count: 3
 nodeProfiles:
-  - name: worker
+  - name: node
     description: "Simple Mattermost Server"
     requirements:
       cpu:
