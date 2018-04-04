@@ -53,6 +53,14 @@ nodeProfiles:
 hooks:
   install:
     job: file://install.yaml
+  clusterProvision:
+    job: file://clusterProvision.yaml
+  nodesProvision:
+    job: file://nodesProvision.yaml
+  nodesDeprovision:
+    job: file://nodesDeprovision.yaml
+  clusterDeprovision:
+    job: file://clusterDeprovision.yaml
 systemOptions:
   docker:
     storageDriver: overlay2
