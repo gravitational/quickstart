@@ -16,9 +16,7 @@ endpoints:
 providers:
   aws:
     regions:
-      - us-west-2
-      - us-east-1
-      - eu-central-1
+      - us-east-2
 installer:
   setupEndpoints:
     - "Setup"
@@ -26,12 +24,22 @@ installer:
     prompt: "How many nodes do you want?"
     items:
       - name: "single"
-        description: ""
+        description: "One node"
         nodes:
-          - profile: worker
+          - profile: node
             count: 1
+      - name: "double"
+        description: "Two-node cluster"
+        nodes:
+          - profile: node
+            count: 2
+      - name: "triple"
+        description: "Three-node cluster"
+        nodes:
+          - profile: node
+            count: 3
 nodeProfiles:
-  - name: worker
+  - name: node
     description: "Simple Mattermost Server"
     requirements:
       cpu:
@@ -41,10 +49,18 @@ nodeProfiles:
     providers:
       aws:
         instanceTypes:
-          - c3.4xlarge
+          - m4.xlarge
 hooks:
   install:
     job: file://install.yaml
+  clusterProvision:
+    job: file://clusterProvision.yaml
+  nodesProvision:
+    job: file://nodesProvision.yaml
+  nodesDeprovision:
+    job: file://nodesDeprovision.yaml
+  clusterDeprovision:
+    job: file://clusterDeprovision.yaml
 systemOptions:
   docker:
     storageDriver: overlay2

@@ -139,23 +139,32 @@ spec:
 ---
 # mattermost postgres worker
 apiVersion: v1
-kind: Pod
+kind: ReplicationController
 metadata:
   name: mattermost-database
+  namespace: default
   labels:
     app: mattermost
     role: mattermost-database
     release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}    
-  namespace: default
+    heritage: {{ .Release.Service }}
 spec:
-  containers:
-  - name: mattermost-postgres
-    securityContext:
-      runAsUser: 0
-    image: {{.Values.registry}}postgres:9.4.4
-    ports:
-      - containerPort: 5432
+  replicas: 1
+  selector:
+    role: mattermost-database
+  template:
+    metadata:
+      labels:
+        app: mattermost
+        role: mattermost-database
+    spec:
+      containers:
+      - name: mattermost-postgres
+        securityContext:
+          runAsUser: 0
+        image: {{.Values.registry}}postgres:9.4.4
+        ports:
+        - containerPort: 5432
 ---
 # mattermost worker
 apiVersion: extensions/v1beta1
@@ -165,11 +174,11 @@ metadata:
     app: mattermost
     role: mattermost-worker
     release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}    
+    heritage: {{ .Release.Service }}
   name: mattermost-worker
   namespace: default
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       role: mattermost-worker

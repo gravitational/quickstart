@@ -2,7 +2,7 @@ variable "key_pair" {}
 variable "provisioning_token" {}
 
 variable "advertise_addr" {
-    description = "format: <hostname>:<https-port>,<ssh-port>, e.g. example.com:443,33008"
+    description = "format: <hostname>:<port>, e.g. example.com:443"
 }
 
 variable "region" {
