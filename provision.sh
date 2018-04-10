@@ -1,10 +1,25 @@
 #!/bin/bash
 
-# turn on ipv4 forwarding
-egrep -q "^(\s*)net.ipv4.ip_forward\s*=\s*\S+(\s*#.*)?\s*$" /etc/sysctl.conf && sed -ri "s/^(\s*)net.ipv4.ip_forward\s*=\s*\S+(\s*#.*)?\s*$/\1net.ipv4.ip_forward = 1\2/" /etc/sysctl.conf || echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
-sysctl -w net.ipv4.ip_forward=1
+# Configure required kernel modules and parameters
+modprobe overlay || true
+modprobe br_netfilter || true
+modprobe ebtable_filter || true
 
+cat > /etc/modules-load.d/telekube.conf <<EOT
+brigde
+overlay
+ebtable_filter
+EOT
+
+cat > /etc/sysctl.d/50-telekube.conf <<EOT
+net.ipv4.ip_forward=1
+net.bridge.bridge-nf-call-iptables=1
+EOT
+
+sysctl -p /etc/sysctl.d/50-telekube.conf
+
+# Install mattermost application
 cd /vagrant
-tar -xf mattermost.tar
+tar -xvf mattermost.tar
 ./gravity install --advertise-addr=172.28.128.101 --token=test
 gravity resource create -f  /tmp/local.yaml
