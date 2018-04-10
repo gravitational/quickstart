@@ -6,3 +6,4 @@ opscenter.yaml
 server.key
 server.crt
 .vagrant
+.terraform
