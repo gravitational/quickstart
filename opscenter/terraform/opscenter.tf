@@ -33,6 +33,17 @@ variable "instance_type" {
     default = "m4.xlarge"
 }
 
+data "template_file" "user_data" {
+  template = "${file("userdata.tpl")}"
+  vars {
+    server_key = "${indent(4, file(var.server_key))}"
+    server_cert = "${indent(4, file(var.server_cert))}"
+    provisioning_token = "${var.provisioning_token}"
+    cluster_name = "${var.cluster_name}"
+    advertise_addr = "${var.advertise_addr}"
+  }
+}
+
 provider "aws" {
     region = "${var.region}"
 }
@@ -60,27 +71,55 @@ resource "aws_iam_role_policy" "k8s_policy" {
         {
             "Effect": "Allow",
             "Action": [
-                "ec2:*"
+                "autoscaling:*",
+                "ec2:*",
+                "elasticloadbalancing:*",
+                "iam:AddRoleToInstanceProfile",
+                "iam:CreateInstanceProfile",
+                "iam:CreateRole",
+                "iam:DeleteInstanceProfile",
+                "iam:DeleteRole",
+                "iam:DeleteRolePolicy",
+                "iam:GetInstanceProfile",
+                "iam:GetRole",
+                "iam:GetRolePolicy",
+                "iam:ListInstanceProfiles",
+                "iam:ListInstanceProfilesForRole",
+                "iam:ListRoles",
+                "iam:PassRole",
+                "iam:PutRolePolicy",
+                "iam:RemoveRoleFromInstanceProfile",
+                "kms:DescribeKey",
+                "kms:ListAliases",
+                "kms:ListKeys",
+                "s3:*",
+                "sqs:ChangeMessageVisibility",
+                "sqs:ChangeMessageVisibilityBatch",
+                "sqs:CreateQueue",
+                "sqs:DeleteMessage",
+                "sqs:DeleteMessageBatch",
+                "sqs:DeleteQueue",
+                "sqs:GetQueueAttributes",
+                "sqs:GetQueueUrl",
+                "sqs:ListDeadLetterSourceQueues",
+                "sqs:ListQueueTags",
+                "sqs:ListQueues",
+                "sqs:PurgeQueue",
+                "sqs:ReceiveMessage",
+                "sqs:SendMessage",
+                "sqs:SendMessageBatch",
+                "sqs:SetQueueAttributes",
+                "sqs:TagQueue",
+                "sqs:UntagQueue",
+                "ssm:DeleteParameter",
+                "ssm:DeleteParameters",
+                "ssm:DescribeParameters",
+                "ssm:GetParameter",
+                "ssm:GetParameters",
+                "ssm:ListTagsForResource",
+                "ssm:PutParameter"
             ],
-            "Resource": [
-                "*"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "elasticloadbalancing:*"
-            ],
-            "Resource": [
-                "*"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": "s3:*",
-            "Resource": [
-                "arn:aws:s3:::kubernetes-*"
-            ]
+            "Resource": "*"
         }
     ]
 }
@@ -158,60 +197,17 @@ resource "aws_instance" "node" {
     key_name = "${var.key_pair}"
     placement_group = "${aws_placement_group.cluster.id}"
     count = "${var.nodes}"
+    user_data = "${data.template_file.user_data.rendered}"
+
+    lifecycle {
+      ignore_changes = ["user_data"]
+    }
 
     tags {
         Name = "${var.cluster_name}"
         KubernetesCluster = "${var.cluster_name}"
     }
 
-    user_data = <<EOF
-#!/bin/bash
-set -euo pipefail
-
-# disk management
-umount /dev/xvdb || true
-mkfs.ext4 /dev/xvdb
-mkfs.ext4 /dev/xvdf
-sed -i.bak '/xvdb/d' /etc/fstab
-sed -i.bak '/xvdc/d' /etc/fstab
-echo -e '/dev/xvdb\t/var/lib/gravity\text4\tdefaults\t0\t2' >> /etc/fstab
-echo -e '/dev/xvdf\t/var/lib/gravity/planet/etcd\text4\tdefaults\t0\t2' >> /etc/fstab
-mkdir -p /var/lib/gravity
-mount /var/lib/gravity
-mkdir -p /var/lib/gravity/planet/etcd
-mount /var/lib/gravity/planet/etcd
-chown -R 1000:1000 /var/lib/gravity /var/lib/gravity/planet/etcd
-sed -i.bak 's/Defaults    requiretty/#Defaults    requiretty/g' /etc/sudoers
-
-# install config
-mkdir -p /etc/gravitational
-cat > /etc/gravitational/tlskeypair.yaml <<EOT
-kind: tlskeypair
-version: v2
-metadata:
-  name: keypair
-spec:
-  private_key: |
-    ${indent(4, file(var.server_key))}
-  cert: |
-    ${indent(4, file(var.server_cert))}
-EOT
-
-# install opscenter
-yum -y install net-tools curl
-curl https://get.gravitational.io/telekube/install | bash
-
-mkdir -p /home/centos/opscenter
-cd /home/centos/opscenter
-tele pull opscenter:0.0.0+latest -o installer.tar.gz
-tar xvf ./installer.tar.gz
-
-PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
-
-./gravity install --advertise-addr=$PRIVATE_IP --token=${var.provisioning_token} --flavor=standalone --cluster=${var.cluster_name} --ops-advertise-addr=${var.advertise_addr} --debug
-./gravity resource create /etc/gravitational/tlskeypair.yaml
-
-EOF
 
     root_block_device {
         delete_on_termination = true
