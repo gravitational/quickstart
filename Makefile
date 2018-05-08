@@ -1,5 +1,5 @@
-VER ?= 5.0.0-rc.1
-GRAVITY ?= $(GOPATH)/src/github.com/gravitational/gravity/
+VER ?= 5.0.2
+GRAVITY ?= $(GOPATH)/src/github.com/gravitational/telekube/
 BUILDDIR ?= $(GRAVITY)/build/$(VER)
 
 .PHONY: devbuild
