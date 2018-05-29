@@ -1,0 +1,14 @@
+kind: user
+version: v2
+metadata:
+  name: "jenkins@example.com"
+spec:
+  type: "agent"
+  roles: ["@teleadmin"]
+---
+kind: token
+version: v2
+metadata:
+   name: "enter-your-token-here-please-dont-use-this-one"
+spec:
+   user: "jenkins@example.com"
