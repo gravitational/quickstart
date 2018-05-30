@@ -64,3 +64,5 @@ hooks:
 systemOptions:
   docker:
     storageDriver: overlay2
+  runtime:
+    version: 5.0.4

@@ -6,7 +6,7 @@ modprobe br_netfilter || true
 modprobe ebtable_filter || true
 
 cat > /etc/modules-load.d/telekube.conf <<EOT
-brigde
+br_netfilter
 overlay
 ebtable_filter
 EOT
