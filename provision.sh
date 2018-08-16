@@ -4,11 +4,17 @@
 modprobe overlay || true
 modprobe br_netfilter || true
 modprobe ebtable_filter || true
+modprobe ip_tables || true
+modprobe iptable_nat || true
+modprobe iptable_filter || true
 
 cat > /etc/modules-load.d/telekube.conf <<EOT
 br_netfilter
 overlay
 ebtable_filter
+ip_tables
+iptable_nat
+iptable_filter
 EOT
 
 cat > /etc/sysctl.d/50-telekube.conf <<EOT
