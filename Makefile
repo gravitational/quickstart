@@ -1,4 +1,4 @@
-VER ?= 5.0.17
+VER ?= 5.0.23
 GRAVITY ?= $(GOPATH)/src/github.com/gravitational/telekube/
 BUILDDIR ?= $(GRAVITY)/build/$(VER)
 
