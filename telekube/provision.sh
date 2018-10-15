@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TELEKUBE_VERSION="5.0.23"
+TELEKUBE_VERSION="5.2.0"
 
 # Configure required kernel modules and parameters
 modprobe overlay || true
