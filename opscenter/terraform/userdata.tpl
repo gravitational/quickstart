@@ -49,11 +49,11 @@ EOT
 
 # install opscenter
 yum -y install net-tools curl
-curl https://get.gravitational.io/telekube/install/5.0.23 | bash
+curl https://get.gravitational.io/telekube/install/5.2.0 | bash
 
 mkdir -p /home/centos/opscenter
 cd /home/centos/opscenter
-tele pull opscenter:5.0.23 -o installer.tar.gz
+tele pull opscenter:5.2.0 -o installer.tar.gz
 tar xvf ./installer.tar.gz
 
 PRIVATE_IP=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
