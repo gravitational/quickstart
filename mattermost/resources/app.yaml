@@ -95,7 +95,8 @@ systemOptions:
   # the list of battle-tested combinations (called "runtimes"). You can see
   # the full list here:
   #      https://gravitational.com/gravity/docs/changelog/
+  # .. or by executing 'tele ls' command
   runtime:
-    version: 5.4.1
+    version: 5.2.4
   docker:
     storageDriver: overlay2
