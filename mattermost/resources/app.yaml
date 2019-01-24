@@ -58,6 +58,10 @@ nodeProfiles:
       ram:
         min: "2GB"
 
+systemOptions:
+  docker:
+    storageDriver: overlay2
+
 # This section allows you to specify Kubernetes jobs that will be executed
 # inside the cluster when certain cluster lifecycle events happen
 hooks:
