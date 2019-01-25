@@ -18,7 +18,7 @@ endpoints:
     protocol: http
 
 # This section allows to customize the graphical (web UI) installer
-# for the cluster. 
+# for the cluster.
 installer:
 
   # if 'flavors' section is present, the installer will ask the end user what
@@ -58,10 +58,6 @@ nodeProfiles:
       ram:
         min: "2GB"
 
-systemOptions:
-  docker:
-    storageDriver: overlay2
-
 # This section allows you to specify Kubernetes jobs that will be executed
 # inside the cluster when certain cluster lifecycle events happen
 hooks:
@@ -77,3 +73,16 @@ hooks:
     job: file://nodesDeprovision.yaml
   clusterDeprovision:
     job: file://clusterDeprovision.yaml
+
+systemOptions:
+  # The "runtime" is a very important field. It defines which flavor of
+  # Kubernetes/Docker/etc (and other components) will be packaged into
+  # the application bundle. Gravitational Inc is publishing and maintaining
+  # the list of battle-tested combinations (called "runtimes"). You can see
+  # the full list here:
+  #      https://gravitational.com/gravity/docs/changelog/
+  # .. or by executing 'tele ls' command
+  runtime:
+    version: 5.2.5
+  docker:
+    storageDriver: overlay2
