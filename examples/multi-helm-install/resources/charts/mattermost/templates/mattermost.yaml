@@ -1,0 +1,203 @@
+# mattermost config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mattermost-v1
+  namespace: default
+data:
+  config.json: |
+    {
+        "ServiceSettings": {
+            "ListenAddress": ":5000",
+            "MaximumLoginAttempts": 10,
+            "SegmentDeveloperKey": "",
+            "GoogleDeveloperKey": "",
+            "EnableOAuthServiceProvider": false,
+            "EnableIncomingWebhooks": false,
+            "EnableOutgoingWebhooks": false,
+            "EnablePostUsernameOverride": false,
+            "EnablePostIconOverride": false,
+            "EnableTesting": false,
+            "EnableSecurityFixAlert": true
+        },
+        "TeamSettings": {
+            "SiteName": "Mattermost",
+            "MaxUsersPerTeam": 50,
+            "EnableTeamCreation": true,
+            "EnableUserCreation": true,
+            "RestrictCreationToDomains": "",
+            "RestrictTeamNames": true,
+            "EnableTeamListing": false
+        },
+       "SqlSettings": {
+            "DriverName": "postgres",
+            "DataSource": "postgres://postgres:mattermost@postgres.default.svc.cluster.local:5432/postgres?sslmode=disable",
+            "DataSourceReplicas": ["postgres://postgres:mattermost@postgres.default.svc.cluster.local:5432/postgres?sslmode=disable"],
+            "MaxIdleConns": 10,
+            "MaxOpenConns": 10,
+            "Trace": false,
+            "AtRestEncryptKey": "7rAh6iwQCkV4cA1Gsg3fgGOXJAQ43QVg"
+        },
+        "LogSettings": {
+            "EnableConsole": true,
+            "ConsoleLevel": "INFO",
+            "EnableFile": false,
+            "FileLevel": "INFO",
+            "FileFormat": "",
+            "FileLocation": ""
+        },
+        "FileSettings": {
+            "DriverName": "local",
+            "Directory": "/var/mattermost/data/",
+            "EnablePublicLink": true,
+            "PublicLinkSalt": "A705AklYF8MFDOfcwh3I488G8vtLlVip",
+            "ThumbnailWidth": 120,
+            "ThumbnailHeight": 100,
+            "PreviewWidth": 1024,
+            "PreviewHeight": 0,
+            "ProfileWidth": 128,
+            "ProfileHeight": 128,
+            "InitialFont": "luximbi.ttf",
+            "AmazonS3AccessKeyId": "",
+            "AmazonS3SecretAccessKey": "",
+            "AmazonS3Bucket": "",
+            "AmazonS3Region": ""
+        },
+        "EmailSettings": {
+            "EnableSignUpWithEmail": true,
+            "SendEmailNotifications": false,
+            "RequireEmailVerification": false,
+            "FeedbackName": "",
+            "FeedbackEmail": "",
+            "SMTPUsername": "",
+            "SMTPPassword": "",
+            "SMTPServer": "",
+            "SMTPPort": "",
+            "ConnectionSecurity": "",
+            "InviteSalt": "bjlSR4QqkXFBr7TP4oDzlfZmcNuH9YoS",
+            "PasswordResetSalt": "vZ4DcKyVVRlKHHJpexcuXzojkE5PZ5eL",
+            "ApplePushServer": "",
+            "ApplePushCertPublic": "",
+            "ApplePushCertPrivate": ""
+        },
+        "RateLimitSettings": {
+            "EnableRateLimiter": true,
+            "PerSec": 10,
+            "MemoryStoreSize": 10000,
+            "VaryByRemoteAddr": true,
+            "VaryByHeader": ""
+        },
+        "PrivacySettings": {
+            "ShowEmailAddress": true,
+            "ShowFullName": true
+        },
+        "GitLabSettings": {
+            "Enable": false,
+            "Secret": "",
+            "Id": "",
+            "Scope": "",
+            "AuthEndpoint": "",
+            "TokenEndpoint": "",
+            "UserApiEndpoint": ""
+        }
+    }
+---
+# service that routes to database
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    app: mattermost
+    role: mattermost-database
+  namespace: default
+spec:
+  type: NodePort
+  ports:
+  - port: 5432
+  selector:
+    role: mattermost-database
+---
+# service for web worker
+apiVersion: v1
+kind: Service
+metadata:
+  name: mattermost
+  labels:
+    app: mattermost
+    role: mattermost-worker
+  namespace: default
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 5000
+    name: http
+    nodePort: 32010
+  selector:
+    role: mattermost-worker
+---
+# mattermost postgres worker
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: mattermost-database
+  namespace: default
+  labels:
+    app: mattermost
+    role: mattermost-database
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    role: mattermost-database
+  template:
+    metadata:
+      labels:
+        app: mattermost
+        role: mattermost-database
+    spec:
+      containers:
+      - name: mattermost-postgres
+        securityContext:
+          runAsUser: 0
+        image: {{.Values.registry}}postgres:9.4.4
+        ports:
+        - containerPort: 5432
+---
+# mattermost worker
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: mattermost
+    role: mattermost-worker
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  name: mattermost-worker
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      role: mattermost-worker
+  template:
+    metadata:
+      labels:
+        app: mattermost
+        role: mattermost-worker
+    spec:
+      containers:
+      - image: {{.Values.registry}}mattermost-worker:2.2.0
+        name: mattermost-worker
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+        volumeMounts:
+        - name: config-volume
+          mountPath: /var/mattermost/config
+      volumes:
+       - name: config-volume
+         configMap:
+           name: mattermost-v1

@@ -1,0 +1,78 @@
+# Sample application manifest for Mattermost, the open source Slack alternative
+apiVersion: bundle.gravitational.io/v2
+kind: Bundle
+metadata:
+  name: mattermost
+  resourceVersion: "2.2.0"
+
+# The logo can be used to white label Gravity web interface for Kubernetes/Mattermost
+# management
+logo: http://about.mattermost.com/wp-content/uploads/2016/01/logo.png
+
+# This section declares the endpoints Mattermost requires.
+endpoints:
+  - name: "Mattermost"
+    description: "Mattermost application"
+    selector:
+      role: mattermost-worker
+    protocol: http
+
+# This section allows to customize the graphical (web UI) installer
+# for the cluster.
+installer:
+
+  # if 'flavors' section is present, the installer will ask the end user what
+  # type of Kubernetes cluster to create. In this case we're offering an option
+  # to select 1, 2 or 3 node cluster (obviously users can grow/srhink clusters
+  # if they want)
+  flavors:
+    prompt: "How many nodes do you want?"
+    items:
+      - name: "single"
+        description: "One node"
+        nodes:
+          - profile: node
+            count: 1
+      - name: "double"
+        description: "Two-node cluster"
+        nodes:
+          - profile: node
+            count: 2
+      - name: "triple"
+        description: "Three-node cluster"
+        nodes:
+          - profile: node
+            count: 3
+
+# This section allows to define what flavors of servers are required for
+# this cluster. This example uses a single flavor called "node" but you
+# can have flavors like "database" or "gpu", etc.
+nodeProfiles:
+  - name: node
+    description: "Generic Linux node"
+    # gravity will validate that the nodes have the requested amounts
+    # of RAM/CPU
+    requirements:
+      cpu:
+        min: 2
+      ram:
+        min: "2GB"
+
+# This section allows you to specify Kubernetes jobs that will be executed
+# inside the cluster when certain cluster lifecycle events happen
+hooks:
+  install:
+    job: file://install.yaml
+
+systemOptions:
+  # The "runtime" is a very important field. It defines which flavor of
+  # Kubernetes/Docker/etc (and other components) will be packaged into
+  # the application bundle. Gravitational Inc is publishing and maintaining
+  # the list of battle-tested combinations (called "runtimes"). You can see
+  # the full list here:
+  #      https://gravitational.com/gravity/docs/changelog/
+  # .. or by executing 'tele ls' command
+  runtime:
+    version: 5.4.4
+  docker:
+    storageDriver: overlay2
