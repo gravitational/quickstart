@@ -82,7 +82,6 @@ systemOptions:
   # the full list here:
   #      https://gravitational.com/gravity/docs/changelog/
   # .. or by executing 'tele ls' command
-  runtime:
-    version: 5.2.5
+  # If the "runtime" isn't set, it'll default to the systems tele binary.
   docker:
     storageDriver: overlay2
