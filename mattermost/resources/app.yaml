@@ -7,7 +7,7 @@ metadata:
 
 # The logo can be used to white label Gravity web interface for Kubernetes/Mattermost
 # management
-logo: http://about.mattermost.com/wp-content/uploads/2016/01/logo.png
+logo: https://www.mattermost.org/wp-content/uploads/2016/03/logoHorizontalWhite.png
 
 # This section declares the endpoints Mattermost requires.
 endpoints:
