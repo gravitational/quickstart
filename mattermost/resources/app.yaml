@@ -1,6 +1,6 @@
 # Sample application manifest for Mattermost, the open source Slack alternative
-apiVersion: bundle.gravitational.io/v2
-kind: Bundle
+apiVersion: cluster.gravitational.io/v2
+kind: Cluster
 metadata:
   name: mattermost
   resourceVersion: "2.2.0"
