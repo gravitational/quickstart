@@ -189,7 +189,7 @@ spec:
         role: mattermost-worker
     spec:
       containers:
-      - image: {{.Values.registry}}mattermost-worker:2.2.0
+      - image: {{.Values.registry}}mattermost-worker:5.13.2
         name: mattermost-worker
         ports:
         - containerPort: 5000
