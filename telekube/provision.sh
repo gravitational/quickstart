@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TELEKUBE_VERSION="6.2.0"
+TELEKUBE_VERSION="6.2.2"
 
 # Configure required kernel modules and parameters
 modprobe overlay || true

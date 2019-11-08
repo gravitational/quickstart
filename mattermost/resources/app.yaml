@@ -3,7 +3,7 @@ apiVersion: bundle.gravitational.io/v2
 kind: Bundle
 metadata:
   name: mattermost
-  resourceVersion: "5.13.2"
+  resourceVersion: "5.16.3"
 
 # The logo can be used to white label Gravity web interface for Kubernetes/Mattermost
 # management

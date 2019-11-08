@@ -1,4 +1,4 @@
-VER ?= 6.2.0
+VER ?= 6.2.2
 GRAVITY ?= $(GOPATH)/src/github.com/gravitational/gravity
 BUILDDIR ?= $(GRAVITY)/build/$(VER)
 
