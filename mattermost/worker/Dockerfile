@@ -1,6 +1,6 @@
 # Copyright (c) 2015 Spinpunch, Inc. All Rights Reserved.
 # See License.txt for license information.
-FROM quay.io/gravitational/debian-grande:latest
+FROM quay.io/gravitational/debian-grande:buster
 
 # Copy over files
 RUN apt-get update
