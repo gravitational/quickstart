@@ -259,7 +259,7 @@ wordpress   NodePort   100.100.204.73   <none>        80:30080/TCP   75m
 **Note** that this is a single node deployment example.  You have the option of [joining](https://gravitational.com/gravity/docs/cluster/#adding-a-node) or installing with a different flavor.  The default flavor for this Cluster Manifest is small (1 node).  Other flavors include medium (3 nodes) and large (5 nodes). 
 ```
 #Ex:
-```
+
 $ sudo ./gravity install \
         --advertise-addr=10.5.5.28 \
         --token=secret \
@@ -267,6 +267,6 @@ $ sudo ./gravity install \
         --flavor=medium
 ```
 
-Flavor details are in the Wordpress [Cluster Manifest](https://github.com/gravitational/quickstart/blob/master/wordpress/resources/app.yaml) . Flavors provide for specifying the number and configuration of nodes for a deployment. 
+Flavor details are in the Wordpress [Cluster Manifest](./resources/app.yaml) . Flavors provide for specifying the number and configuration of nodes for a deployment. 
 
 
