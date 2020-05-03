@@ -79,13 +79,14 @@ You are welcome to modify this file and you can use --set and --values in the te
 
 
 ### Step 3: Building the Cluster Image
-Let's build the cluster image:
+Let's build the cluster image which will consist of a Kubernetes
+cluster with Wordpress pre-installed inside:
 
 ```bsh
 $ tele build -o wordpress.tar wordpress/resources/app.yaml
 Mon Apr 27 00:49:02 UTC Building cluster image wordpress 0.0.1
 Mon Apr 27 00:49:02 UTC Selecting base image version
-        Will use base image version 7.0.1
+        Will use base image version 7.0.4
 Mon Apr 27 00:49:02 UTC Downloading dependencies from s3://hub.gravitational.io
         Still downloading dependencies from s3://hub.gravitational.io (10 seconds elapsed)
         Still downloading dependencies from s3://hub.gravitational.io (20 seconds elapsed)
@@ -219,7 +220,7 @@ Cluster endpoints:
 Application endpoints:
     * wordpress:0.0.1:
         - wordpress:
-            - http://None:3306
+            - http://10.150.15.236:30080
 
 ```
 
@@ -227,12 +228,12 @@ Application endpoints:
 with Wordpress running inside. To check the health and status of the Cluster,
 execute this command on the target node:
 
-```
+```bash
 $ sudo gravity status
 Cluster name:           wordpress
 Cluster status:         active
 Cluster image:          wordpress, version 0.0.1
-Gravity version:        7.0.1 (client) / 7.0.1 (server)
+Gravity version:        7.0.4 (client) / 7.0.4 (server)
 Join token:             c2d3757aec3e50d210e189dc16b1fb37
 Periodic updates:       Not Configured
 Remote support:         Not Configured
