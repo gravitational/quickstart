@@ -2,7 +2,7 @@
 
 This repository includes the necessary files to package and deploy [Wordpress](https://www.wordpress.org/), an open source content management system, into on-prem, public or private cloud environments using [Gravity](http://gravitational.com/gravity/).  
 
-This manifest uses the Open Elastic Block Store ([OpenEBS](https://openebs.io/) built into Gravity 7.X.
+This manifest uses the Open Elastic Block Store [OpenEBS](https://openebs.io/) built into Gravity 7.X.
 
 # System Requirements
 
