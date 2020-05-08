@@ -37,12 +37,12 @@ installer:
     # List of flavors:
     items:
     - name: "small"
-      description: "Single node install with Master, MySQL DB and Wordpress PHP"
+      description: "Single node"
       nodes:
       - profile: general
         count: 1
     - name: "medium"
-      description: "Three node install with one Master, one node labeled for DB  and one labeled for front-end usage "
+      description: "Three node install with one Master, one DB worker node, and one Front worker node "
       nodes:
       - profile: master
         count: 1
@@ -52,7 +52,7 @@ installer:
         count: 1
 #HA Master nodes (3) configuration with a 2 fronts and a db
     - name: "large"
-      description: "High Availability Master Node configuration with 2 Wordpress PHP nodes and 1 MySQL node"
+      description: "High Availability Master Node configuration with 2 Wordpress PHP nodes and 1 DB node"
       nodes:
       - profile: front
         count: 2
